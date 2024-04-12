@@ -31,7 +31,7 @@ public class Noms {
             while (resultat.next()) {
 
                 Adresse utilisateur = new Adresse(resultat.getInt("IDADRESSE"),
-                        resultat.getString("NUMERORUE"),
+                        resultat.getString( "NUMERORUE"),
                         resultat.getString("NOMRUE"),
                         resultat.getString("CODEPOSTAL"),
                         resultat.getString("VILLE"));
