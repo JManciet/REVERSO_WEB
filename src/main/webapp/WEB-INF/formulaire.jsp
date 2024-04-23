@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: CDA07
-  Date: 10/04/2024
-  Time: 13:45
+  Date: 23/04/2024
+  Time: 10:41
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
@@ -12,11 +12,5 @@
 </head>
 <body>
 <%@ include file="menu.jsp" %>
-<p>Bonjour</p>
-<ul>
-    <c:forEach var="adresse" items="${ adresses }">
-        <li><c:out value="${ adresse.numeroRue }" /></li>
-    </c:forEach>
-</ul>
 </body>
 </html>
