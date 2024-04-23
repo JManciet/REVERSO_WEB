@@ -129,7 +129,7 @@
 
         for (const link of actionLinks) {
             const currentHref = link.getAttribute('href');
-            const newHref = currentHref+'?action=' + boutonAction;
+            const newHref = currentHref+'&action=' + boutonAction;
             link.setAttribute('href', newHref);
         }
     }
