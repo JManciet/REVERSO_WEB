@@ -19,7 +19,7 @@ import jakarta.servlet.annotation.*;
 
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class Formulaire extends HttpServlet {
-    String choix;
+    private String choix;
     private String action;
 
     private Societe societe;
@@ -37,9 +37,9 @@ public class Formulaire extends HttpServlet {
         System.out.println(nomSociete);
         if (action == null){
             request.setAttribute("typeAction", TypeAction.CREATION);
-        } else if (action.equals("modifier")){
+        } else if (action.equals("modification")){
             request.setAttribute("typeAction", TypeAction.MODIFICATION);
-        } else if (action.equals("supprimer")){
+        } else if (action.equals("suppression")){
             request.setAttribute("typeAction", TypeAction.SUPPRESSION);
         }
 
@@ -96,7 +96,7 @@ public class Formulaire extends HttpServlet {
                 }
             }
 
-        } else if (action.equals("modifier")){
+        } else if (action.equals("modification")){
 
             if(societe instanceof Client) {
                 try {
@@ -112,7 +112,7 @@ public class Formulaire extends HttpServlet {
                 }
             }
 
-        } else if (action.equals("supprimer")){
+        } else if (action.equals("suppression")){
 
             if(societe instanceof Client) {
                 try {
@@ -141,7 +141,7 @@ public class Formulaire extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
+        System.out.println("URL: " + req.getRequestURI());
 
         this.getServletContext().getRequestDispatcher("/WEB-INF/acceuil.jsp").forward(req, resp);
     }
@@ -171,12 +171,12 @@ public class Formulaire extends HttpServlet {
                     Integer.parseInt(req.getParameter("ca"))
             );
         } else if (choix.equals("prospect")) {
-            Interessement interesse = null;
-            if (true) {
-                interesse = Interessement.OUI;
-            } else if (true) {
-                interesse = Interessement.NON;
-            }
+            Interessement interesse = req.getParameter("interesse") == null ? null : Interessement.valueOf(req.getParameter("interesse"));
+//            if (req.getParameter("interesse").equals("oui")) {
+//                interesse = Interessement.OUI;
+//            } else if (req.getParameter("interesse").equals("non")) {
+//                interesse = Interessement.NON;
+//            }
             societe = new Prospect(
                     this.societe == null ? null : this.societe.getIdentifiant(),
                     req.getParameter("rs"),

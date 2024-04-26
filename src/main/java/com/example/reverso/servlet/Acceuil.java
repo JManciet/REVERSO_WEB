@@ -28,9 +28,11 @@ public class Acceuil extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        //super.doPost(req, resp);
 
-
+        System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+        System.out.println("URL: " + req.getRequestURI());
+        this.getServletContext().getRequestDispatcher("/WEB-INF/acceuil.jsp").forward(req, resp);
     }
 
     public void destroy() {

@@ -1,3 +1,5 @@
+<%@ page import="com.example.reverso.utilitaires.Interessement" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: CDA07
@@ -12,7 +14,10 @@
 </head>
 <body>
 <%@ include file="menu.jsp" %>
-<form method="post" action="${pageContext.request.contextPath}/formulaire">
+<c:set var="societe" value="${fn:toLowerCase(typeSociete)}" scope="page" />
+<c:set var="action" value="${fn:toLowerCase(typeAction)}" scope="page" />
+<p>Page de <c:out value="${ action }" /> d'un <c:out value="${ societe }" /></p>
+<form method="post" action="#">
 
     <div class="form">
         <label for="rs">Raison sociale: </label>
@@ -37,17 +42,54 @@
         <label for="ville">Ville: </label>
         <input type="text" name="ville" id="ville" required />
     </fieldset>
-    <div class="form">
-        <label for="ca">Chiffre d'affaire: </label>
-        <input type="number" name="ca" id="ca" required />
-    </div>
-    <div class="form">
-        <label for="nbrEmp">Nombre d'employés: </label>
-        <input type="number" name="nbrEmp" id="nbrEmp" required />
-    </div>
+    <c:if test="${typeSociete=='CLIENT'}">
+        <div class="form">
+            <label for="ca">Chiffre d'affaire: </label>
+            <input type="number" name="ca" id="ca" required />
+        </div>
+        <div class="form">
+            <label for="nbrEmp">Nombre d'employés: </label>
+            <input type="number" name="nbrEmp" id="nbrEmp" required />
+        </div>
+    </c:if>
+    <c:if test="${typeSociete=='PROSPECT'}">
+        <div class="form">
+            <label for="date">Date prospection: </label>
+            <input type="date" name="date" id="date" required />
+        </div>
+        <fieldset>
+            <legend>Prospect interessé ?</legend>
+            <div>
+                <input type="radio" id="oui" name="interesse" value="<c:out value="<%=Interessement.OUI%>"/>" />
+                <label for="oui">oui</label>
+            </div>
+            <div>
+                <input type="radio" id="non" name="interesse" value="<c:out value="<%=Interessement.NON%>"/>" />
+                <label for="non">non</label>
+            </div>
+        </fieldset>
+    </c:if>
     <label for="commentaires">Commentaires: </label>
-    <input type="text" name="commentaires" id="commentaires" required />
-    <button type="submit">clique</button>
+    <textarea id="commentaires" name="commentaires" rows="4" cols="50"></textarea>
+    <button id="bouton" type="submit">
+        <c:if test="${typeSociete=='CLIENT'}">
+
+        </c:if>
+        <c:if test="${typeSociete=='PROSPECT'}">
+
+        </c:if>
+    </button>
 </form>
+<script>
+
+    const bouton = document.getElementById('bouton')
+
+
+    if("<c:out value="${typeAction}"/>" === "CREATION"){
+        bouton.innerText = "Valider la création du "+ ("<c:out value="${typeSociete}"/>" === "CLIENT")? "client" : "prospect"
+    } else {
+        zoneProspect.style.display = 'block';
+    }
+</script>
 </body>
 </html>

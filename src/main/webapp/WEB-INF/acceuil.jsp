@@ -17,17 +17,18 @@
 </head>
 <body>
 <%@ include file="menu.jsp" %>
-<p>Que souhaitez vous gérez ?</p>
+<c:set var="foo" scope="request" value="..."/>
+<h2>Que souhaitez vous gérez ?</h2>
 <div id="boutons-choix-societe">
-    <a href="#" id="clients" class="btn btn-primary">CLIENTS</a>
-    <a href="#" id="propects" class="btn btn-primary">PROSPECTS</a>
+    <a href="#" id="clients" class="btn">CLIENTS</a>
+    <a href="#" id="propects" class="btn">PROSPECTS</a>
 </div>
-
+<h2 id="test"></h2>
 <div id="boutons-action" style="display: none;">
-    <a href="/reverso/formulaire" id="creation" class="btn btn-secondary">CREATION</a>
+    <a href="formulaire" id="creation" class="btn btn-secondary">CREATION</a>
     <a href="#" data-toggle="modal" data-target="#exampleModalLong" id="modification" class="btn btn-secondary">MODIFICATION</a>
     <a href="#" data-toggle="modal" data-target="#exampleModalLong" id="suppression" class="btn btn-secondary">SUPPRESSION</a>
-    <a href="/reverso/affichage" id="affichage" class="btn btn-secondary">AFFICHAGE</a>
+    <a href="affichage" id="affichage" class="btn btn-secondary">AFFICHAGE</a>
 </div>
 
 <!-- Modal -->
@@ -43,12 +44,12 @@
             <div id="liste" class="modal-body">
                 <ul id="listeClients" style="display: none;">
                     <c:forEach var="societe" items="${clients}">
-                        <li><a href="/reverso/formulaire?choix=client&societe=<c:out value="${ societe.raisonSociale }" />"><c:out value="${ societe.raisonSociale }" /></a></li>
+                        <li><a data="${ societe.raisonSociale }" href="#"><c:out value="${ societe.raisonSociale }" /></a></li>
                     </c:forEach>
                 </ul>
                 <ul id="listeProspects" style="display: none;">
                     <c:forEach var="societe" items="${prospects}">
-                        <li><a href="/reverso/formulaire?choix=prospect&societe=<c:out value="${ societe.raisonSociale }" />"><c:out value="${ societe.raisonSociale }" /></a></li>
+                        <li><a data="${ societe.raisonSociale }" href="#"><c:out value="${ societe.raisonSociale }" /></a></li>
                     </c:forEach>
                 </ul>
             </div>
@@ -63,6 +64,8 @@
     const boutonChoixPropects = document.getElementById('propects');
     const boutonsSupplementaires = document.getElementById('boutons-action');
 
+    const test = document.getElementById('test');
+
     const boutonModification = document.getElementById('modification');
     const boutonSuppression = document.getElementById('suppression');
     const liste = document.getElementById('liste');
@@ -76,23 +79,29 @@
     boutonChoixClients.addEventListener('click', function() {
         boutonsSupplementaires.style.display = 'block';
 
+        boutonChoixClients.classList.add("btn-primary")
+        boutonChoixPropects.classList.remove("btn-primary")
+        test.innerText = "Gestion des clients";
         listeChoixClients.style.display = 'block';
         listeChoixProspects.style.display = 'none';
 
         choix = 'client'
 
-        updateChoixLinks(choix);
+        updateChoixLinks();
     });
 
     boutonChoixPropects.addEventListener('click', function() {
         boutonsSupplementaires.style.display = 'block';
 
+        boutonChoixPropects.classList.add("btn-primary")
+        boutonChoixClients.classList.remove("btn-primary")
+        test.innerText = "Gestion des prospects";
         listeChoixClients.style.display = 'none';
         listeChoixProspects.style.display = 'block';
 
         choix = 'prospect'
 
-        updateChoixLinks(choix);
+        updateChoixLinks();
     });
 
 
@@ -112,14 +121,19 @@
         updateActionLinks('suppression');
     });
 
-    function updateChoixLinks(boutonChoix) {
+    function updateChoixLinks() {
 
         const actionLinks = boutonsSupplementaires.querySelectorAll('a');
 
         for (const link of actionLinks) {
-            const currentHref = link.getAttribute('href');
-            const newHref = currentHref+'?choix=' + boutonChoix;
-            link.setAttribute('href', newHref);
+            let url = new URL(window.location.origin);
+            if(link.getAttribute('id') === 'creation') {
+                url = new URL(window.location.origin + '/reverso/formulaire');
+            } else if (link.getAttribute('id') === 'affichage') {
+                url = new URL(window.location.origin + '/reverso/affichage');
+            }
+            url.searchParams.append('choix', choix);
+            link.setAttribute('href', url.href);
         }
     }
 
@@ -128,9 +142,15 @@
         const actionLinks = liste.querySelectorAll('a');
 
         for (const link of actionLinks) {
-            const currentHref = link.getAttribute('href');
-            const newHref = currentHref+'&action=' + boutonAction;
-            link.setAttribute('href', newHref);
+
+
+
+            let url = new URL(window.location.origin + "/reverso/formulaire");
+            url.searchParams.append('action', boutonAction);
+            url.searchParams.append('choix', choix);
+            url.searchParams.append('societe', link.getAttribute('data'));
+            link.setAttribute('href', url.href);
+
         }
     }
 </script>
